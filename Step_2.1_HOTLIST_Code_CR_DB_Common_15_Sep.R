@@ -9,6 +9,7 @@ dim(Country_Txn_Data_DB)
 Country_Txn_Data_Hot_CR <- data.table(Country_Txn_Data_CR)
 Country_Txn_Data_Hot_DB <- data.table(Country_Txn_Data_DB)
 
+
 ##########################################################################################
 
 # HR_Country_BLACKLIST_Mer_BD	BD	Credit
@@ -19,9 +20,9 @@ BD_BLACKLISTED_MERCHANTS <- read_excel("//inhadfil101.in.standardchartered.com/w
 
 BD_BLACKLISTED_MERCHANTS <- data.table(BD_BLACKLISTED_MERCHANTS)
 
-Name_list_COLL <- sqldf("Select Name from BD_BLACKLISTED_MERCHANTS")
+Name_list_BD_CR <- sqldf("Select Name from BD_BLACKLISTED_MERCHANTS")
 
-Country_Txn_Data_1_sub <- sqldf("Select * from Country_Txn_Data_Hot_CR M left join BD_BLACKLISTED_MERCHANTS H on M.MER_ID = H.Name where H.Value IS NOT NULL")
+Country_Txn_Data_1_sub <- sqldf("Select * from Country_Txn_Data_Hot_CR where Trim(mer_id) in Name_list_BD_CR ")
 
 if(nrow(Country_Txn_Data_1_sub) == 0){
 print("nomatch HR_COUNTRY_BLACKLIST_MER_BD")
@@ -30,53 +31,40 @@ Country_Txn_Data_11 <- anti_join(Country_Txn_Data_1, Country_Txn_Data_1_sub, by 
 
 Country_Txn_Data_1_sub$Hotlist_Rule_Name = 'HR_COUNTRY_BLACKLIST_MER_BD'
 
-Country_Txn_Data_1 <- bind_rows(Country_Txn_Data_11, Country_Txn_Data_1_sub, fill = NA)
+Country_Txn_Data_1 <- bind_rows(Country_Txn_Data_11, Country_Txn_Data_1_sub)
 }
 
 
 # Head of Country_Txn_Data_1
-# Dimension of Country_Txn_Data_1 and Country_Txn_Data_22 must match
+# Dimension of Country_Txn_Data_1 and Country_Txn_Data_11 must match
 head(Country_Txn_Data_1)
 dim(Country_Txn_Data_1)
 dim(Country_Txn_Data_CR)
 dim(Country_Txn_Data_DB)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ##########################################################################################
 
-# Common = COLLUSIVE_MERCHANTS_BASE
+# HR_Country_BLACKLIST_Mer_BD	BD	Debit
 
-COLLUSIVE_MERCHANTS_BASE <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/COLLUSIVE_MERCHANTS_BASE.xls")
+# Common = BD_BLACKLISTED_MERCHANTS
 
-COLLUSIVE_MERCHANTS_BASE <- data.table(COLLUSIVE_MERCHANTS_BASE)
+BD_BLACKLISTED_MERCHANTS <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/BD_BLACKLISTED_MERCHANTS.xls")
 
-Name_list_COLL <- sqldf("Select Name from COLLUSIVE_MERCHANTS_BASE")
+BD_BLACKLISTED_MERCHANTS <- data.table(BD_BLACKLISTED_MERCHANTS)
 
-Country_Txn_Data_1_sub <- sqldf("Select * from Country_Txn_Data_DB where trim(mer_id) in Name_list_COLL")
+Name_list_BD_DB <- sqldf("Select Name from BD_BLACKLISTED_MERCHANTS")
 
-if(nrow(Country_Txn_Data_1_sub) == 0){
-print("nomatch HR_GLOBAL_COLLUSIVE_MERCHANT_TEST")
+Country_Txn_Data_1_sub_1 <- sqldf("Select * from Country_Txn_Data_Hot_DB where Trim(mer_id) in Name_list_BD_DB ")
+
+if(nrow(Country_Txn_Data_1_sub_1) == 0){
+print("nomatch HR_COUNTRY_BLACKLIST_MER_BD")
 }else{
-Country_Txn_Data_11 <- anti_join(Country_Txn_Data_1, Country_Txn_Data_1_sub, by = "FI_TRANSACTION_ID")
+Country_Txn_Data_22 <- anti_join(Country_Txn_Data_1, Country_Txn_Data_1_sub_1, by = "FI_TRANSACTION_ID")
 
-Country_Txn_Data_1_sub$Hotlist_Rule_Name = 'HR_GLOBAL_COLLUSIVE_MERCHANT_TEST'
+Country_Txn_Data_1_sub_1$Hotlist_Rule_Name = 'HR_COUNTRY_BLACKLIST_MER_BD'
 
-Country_Txn_Data_1 <- bind_rows(Country_Txn_Data_11, Country_Txn_Data_1_sub, fill = NA)
+Country_Txn_Data_1 <- bind_rows(Country_Txn_Data_22, Country_Txn_Data_1_sub_1)
 }
 
 
@@ -87,54 +75,24 @@ dim(Country_Txn_Data_1)
 dim(Country_Txn_Data_CR)
 dim(Country_Txn_Data_DB)
 
-############################################################################################
+
+##########################################################################################
 
 
-# HK = MID_WHITELIST_GLOBAL_HK
+# HR_Global_Blacklistingn1_TW	 'TW'	Credit
 
-MID_WHITELIST_GLOBAL_HK <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/MID_WHITELIST_GLOBAL_HK.xls")
+TW_BLACKLISTED_MERCHANTS <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/Hotlist_160921_TW.xls")
 
-MID_WHITELIST_GLOBAL_HK <- data.table(MID_WHITELIST_GLOBAL_HK)
+TW_BLACKLISTED_MERCHANTS <- data.table(TW_BLACKLISTED_MERCHANTS)
 
-Name_list_HK <- sqldf("Select Name from MID_WHITELIST_GLOBAL_HK")
+Name_list_TW_CR <- sqldf("Select Name from TW_BLACKLISTED_MERCHANTS")
 
-Country_Txn_Data_1_sub_1 <- sqldf("Select * from Country_Txn_Data_Hot_CR where trim(mer_id) not in Name_list_HK")
-
-
-if(nrow(Country_Txn_Data_1_sub_1) == 0){
-print("nomatch MR_MERCHANT_ACQID_LOC_CP_TEST")
-}else{
-Country_Txn_Data_22 <- anti_join(Country_Txn_Data_1, Country_Txn_Data_1_sub_1, by = "FI_TRANSACTION_ID")
-
-Country_Txn_Data_1_sub_1$Hotlist_Rule_Name = 'MR_MERCHANT_ACQID_LOC_CP_TEST'
-
-Country_Txn_Data_1 <- bind_rows(Country_Txn_Data_22, Country_Txn_Data_1_sub_1)
-}
-
-# Dimension of Country_Txn_Data_1 and Country_Txn_Data_44 must match
-head(Country_Txn_Data_1)
-dim(Country_Txn_Data_1)
-dim(Country_Txn_Data_CR)
-dim(Country_Txn_Data_DB)
-
-
-############################################################################################
-
-
-# HK = BLACKLISTED_MERCHANTS_HK
-
-BLACKLISTED_MERCHANTS_HK <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/BLACKLISTED_MERCHANTS_HK.xls")
-
-BLACKLISTED_MERCHANTS_HK <- data.table(BLACKLISTED_MERCHANTS_HK)
-
-Name_list_HK_1 <- sqldf("Select Name from BLACKLISTED_MERCHANTS_HK")
-
-Country_Txn_Data_1_sub_2 <- sqldf("Select * from Country_Txn_Data_CR where trim(mer_id) not in Name_list_HK_1")
+Country_Txn_Data_1_sub_2 <- sqldf("Select * from Country_Txn_Data_Hot_CR where Trim(mer_id) in Name_list_TW_CR ")
 
 if(nrow(Country_Txn_Data_1_sub_2) == 0){
-print("nomatch MR_MERCHANT_ACQID_LOC_CP_TEST")
+print("nomatch HR_GLOBAL_BLACKLISTINGN1_TW")
 }else{
-Country_Txn_Data_1_sub_2$Hotlist_Rule_Name = 'MR_MERCHANT_ACQID_LOC_CP_TEST'
+Country_Txn_Data_1_sub_2$Hotlist_Rule_Name = 'HR_GLOBAL_BLACKLISTINGN1_TW'
 
 Country_Txn_Data_33 <- anti_join(Country_Txn_Data_1, Country_Txn_Data_1_sub_2, by = "FI_TRANSACTION_ID")
 
@@ -147,27 +105,28 @@ dim(Country_Txn_Data_1)
 dim(Country_Txn_Data_CR)
 dim(Country_Txn_Data_DB)
 
-############################################################################################
 
-# DR = BLACKLISTED_MERCHANTS_DR
+##########################################################################################
 
-BLACKLISTED_MERCHANTS_DR <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/BLACKLISTED_MERCHANTS_DR.xls")
 
-BLACKLISTED_MERCHANTS_DR <- data.table(BLACKLISTED_MERCHANTS_DR)
+# HR_Global_Blacklistingn1_TW	 'TW'	Debit
 
-Name_list_DR <- sqldf("Select Name from BLACKLISTED_MERCHANTS_DR")
+TW_BLACKLISTED_MERCHANTS <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/Hotlist_160921_TW.xls")
 
-Country_Txn_Data_1_sub_3 <- sqldf("Select * from Country_Txn_Data_CR where trim(mer_id) in Name_list_DR")
+TW_BLACKLISTED_MERCHANTS <- data.table(TW_BLACKLISTED_MERCHANTS)
+
+Name_list_TW_DB <- sqldf("Select Name from TW_BLACKLISTED_MERCHANTS")
+
+Country_Txn_Data_1_sub_3 <- sqldf("Select * from Country_Txn_Data_Hot_DB where (Trim(mer_id) in Name_list_TW_DB) or (Trim(mer_id) in ('4445091120618', '4445090874552')) or (TRIM(MER_ID) IN ('000812770010915', '000812770010917', '000812770010918', '000812770010919', '000812770010920') AND TRN_AMT >= 5000)")
 
 if(nrow(Country_Txn_Data_1_sub_3) == 0){
-print("nomatch MR_MERCHANT_ACQID_LOC_CP_TEST")
+print("nomatch HR_GLOBAL_BLACKLISTINGN1_TW")
 }else{
-Country_Txn_Data_1_sub_3$Hotlist_Rule_Name = 'HR_COUNTRY_MID_BLACKLIST_HK_TEST'
+Country_Txn_Data_1_sub_3$Hotlist_Rule_Name = 'HR_GLOBAL_BLACKLISTINGN1_TW'
 
 Country_Txn_Data_44 <- anti_join(Country_Txn_Data_1, Country_Txn_Data_1_sub_3, by = "FI_TRANSACTION_ID")
 
 Country_Txn_Data_1 <- bind_rows(Country_Txn_Data_44, Country_Txn_Data_1_sub_3)
-
 }
 
 # Dimension of Country_Txn_Data_1 and Country_Txn_Data_44 must match
@@ -175,6 +134,41 @@ head(Country_Txn_Data_1)
 dim(Country_Txn_Data_1)
 dim(Country_Txn_Data_CR)
 dim(Country_Txn_Data_DB)
+
+
+##########################################################################################
+
+
+# HR_Global_Blacklisting_n1_1	 'AE', 'BH', 'BN', 'BW', 'GH', 'ID', 'IN', 'JE', 'JO', 'KE', 'LK', 'MY', 'NG', 'NP', 'SG', # 'VN', 'ZM'	credit
+
+
+GBL_BLACKLISTED_MERCHANTS <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/GBL_BLACKLISTED_MERCHANTS.xls")
+
+GBL_BLACKLISTED_MERCHANTS <- data.table(GBL_BLACKLISTED_MERCHANTS)
+
+Name_list_GBL <- sqldf("Select Name from GBL_BLACKLISTED_MERCHANTS")
+
+Country_Txn_Data_1_sub_4 <- sqldf("Select * from Country_Txn_Data_Hot_CR where Trim(mer_id) in Name_list_GBL")
+
+if(nrow(Country_Txn_Data_1_sub_4) == 0){
+print("nomatch HR_GLOBAL_BLACKLISTING_N1_1")
+}else{
+Country_Txn_Data_1_sub_4$Hotlist_Rule_Name = 'HR_GLOBAL_BLACKLISTING_N1_1'
+
+Country_Txn_Data_55 <- anti_join(Country_Txn_Data_1, Country_Txn_Data_1_sub_4, by = "FI_TRANSACTION_ID")
+
+Country_Txn_Data_1 <- bind_rows(Country_Txn_Data_55, Country_Txn_Data_1_sub_4)
+}
+
+# Dimension of Country_Txn_Data_1 and Country_Txn_Data_55 must match
+head(Country_Txn_Data_1)
+dim(Country_Txn_Data_1)
+dim(Country_Txn_Data_CR)
+dim(Country_Txn_Data_DB)
+
+
+##########################################################################################
+
 
 # Debit and Credit Data segregating
 Country_Txn_Data_DB <- Country_Txn_Data_1[which(str_sub(Country_Txn_Data_1$CRD_CLNT_ID,-3) == '_DB'), ]

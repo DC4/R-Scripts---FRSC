@@ -254,8 +254,8 @@ convert_cr <- data.frame(
 country = c("SC_CCMSSG_CR","SC_CCMSBN_CR","SC_CCMSMY_CR","SC_CCMSPH_CR","SC_CCMSTH_CR","SC_CCMSID_CR","SC_CCMSIN_CR",
 "SC_CCMSTW_CR","SC_C400AE_CR","SC_C400BH_CR","SC_C400BW_CR","SC_C400GH_CR","SC_C400JO_CR","SC_C400JE_CR",
 "SC_C400KE_CR","SC_C400LK_CR","SC_C400NG_CR","SC_C400NP_CR","SC_C400VN_CR","SC_C400ZM_CR","SC_CCMSHK_CR",
-"SC_C400BD_CR"), Fx = c(1.255698,1.255698,3.221743,43.88082,32.675467,11627.906977,63.75,30.116853,3.67,0.377132,
-10.2587,4.42718,0.708893,0.75,103.824,153.05,365.467,102.69,22727.50,8.98193,7.8,83.60
+"SC_C400BD_CR", "SC_PMTHK_CR"), Fx = c(1.255698,1.255698,3.221743,43.88082,32.675467,11627.906977,63.75,30.116853,3.67,0.377132,
+10.2587,4.42718,0.708893,0.75,103.824,153.05,365.467,102.69,22727.50,8.98193,7.8,83.60, 7.8
 ))
 
 
@@ -319,6 +319,7 @@ Country_Txn_Data_1 <- Country_Txn_Data
 Country_Txn_Data_1$USR_IND_4_NEW <- str_sub(Country_Txn_Data_1$USR_IND_4,1,2)
 Country_Txn_Data_1$USR_IND_4_NEW_1 <- str_sub(Country_Txn_Data_1$USR_IND_4,3,4)
 Country_Txn_Data_1$USR_IND_4_NEW_2 <- str_sub(Country_Txn_Data_1$USR_IND_4,1,1)
+Country_Txn_Data_1$USR_IND_4_NEW_3 <- str_sub(Country_Txn_Data_1$USR_IND_4,3,2)
 Country_Txn_Data_1$ACCT_NBR_NEW <- str_sub(Country_Txn_Data_1$ACCT_NBR,1,1)
 Country_Txn_Data_1$USER_DATA_4_STRG_NEW <- str_sub(Country_Txn_Data_1$USER_DATA_4_STRG, 1, 11)
 Country_Txn_Data_1$USR_DAT_2_NEW <- str_sub(Country_Txn_Data_1$USR_DAT_2, 9, 1)
@@ -333,6 +334,7 @@ Country_Txn_Data_1$MER_NM_8 <- str_sub(Country_Txn_Data_1$MER_NM,1,8)
 Country_Txn_Data_1$MER_NM_9 <- str_sub(Country_Txn_Data_1$MER_NM,1,9)
 Country_Txn_Data_1$ACCT_NBR_1_6	 <- str_sub(Country_Txn_Data_1$ACCT_NBR,1,6)
 Country_Txn_Data_1$USR_IND_3_NEW <- str_sub(Country_Txn_Data_1$USR_IND_3,1,3)
+Country_Txn_Data_1$USR_IND_7_NEW <- str_sub(Country_Txn_Data_1$USER_INDICATOR_7_XCD,1,3)
 Country_Txn_Data_1$MCC <- as.numeric(Country_Txn_Data_1$SIC_CD)
 
 # Debit and Credit Data segregating

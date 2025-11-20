@@ -42,12 +42,15 @@ for (a in month_seq)
 
 }
 
+# To exclude specific project use this
+# New_DBlist = New_DBlist[New_DBlist!="cr_sep2021.db"]
+
 print(New_DBlist)
 
 str(New_DBlist)
 
 
-for (dbl in New_DBlist)
+for (dbl in New_DBlist) 
   
 {
   
