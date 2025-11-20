@@ -1,0 +1,44 @@
+if
+(
+	DBTRAN25.authPostFlag = "A" and 
+	(DBTRAN25.authDecisionCode = "A" or (Is_Missing(DBTRAN25.authDecisionCode)=1 and DBTRAN25.authResponseCode = "A")) and 
+	DBTRAN25.transactionType = ("C" or "M" or "P" or "A") and 
+	LookupList("GENUINE",DBTRAN25.pan) = 0 and
+	LookupList("VIP LIST",DBTRAN25.pan) = 0 and
+	DBTRAN25.posEntryMode <> ("V") and
+	LookupList("BLACKLISTED_MERCHANTS_DEBIT",DBTRAN25.merchantId) = 1 
+)
+then
+{
+if
+(
+	DBTRAN25.clientIdFromHeader = 
+	(
+		"SC_EURONETBH_DB" or "SC_EURONETBN_DB" or "SC_SPARROWBW_DB" or 
+		"SC_EURONETIN_DB" or "SC_EURONETMY_DB" or
+		"SC_EURONETQA_DB" or "SC_EURONETSG_DB" or "SC_EURONETAE_DB" or 
+		"SC_SPARROWGH_DB" or "SC_SPARROWGM_DB" or "SC_SPARROWJO_DB" or 
+		"SC_SPARROWKE_DB" or "SC_SPARROWLK_DB" or "SC_SPARROWNG_DB" or 
+		"SC_SPARROWNP_DB" or "SC_SPARROWTZ_DB" or "SC_SPARROWUG_DB" or 
+		"SC_EURONETVN_DB" or "SC_SPARROWZM_DB" or "SC_SPARROWZW_DB" or 
+		"SC_SPARROWCM_DB" or "SC_SPARROWCI_DB" or "SC_SPARROWSL_DB"
+	)
+)
+then
+{
+	if
+	(Is_Missing(DBTRAN25.posEntryMode) = 1)
+	then
+	{
+	SendAuthAdvice(DECLINE);
+	return;
+	}
+	else
+	{
+		SendAuthAdvice(DECLINE);
+		ForceCase(SERVICE);
+		CreateQueueAttributeString("HR_Global_Debit_Blacklist_MID",SRVC_UDV_HR_QUEUE); 
+		return;
+	}
+}
+}

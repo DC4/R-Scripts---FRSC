@@ -1,0 +1,46 @@
+(
+	TRN_AUTH_POST = 'A' and 
+    (AUTH_DECISION_XCD = 'A' or DECI_CD_ORIG = 'A') and 
+	SIC_CD = '6051' and
+(
+	UPPER(MER_NM) like '%SPECTROCOIN.COM%' or
+	UPPER(MER_NM) like '%STOCKS.EXCHANGE%' or
+	UPPER(MER_NM) like '%TIDEBIT%' or
+	UPPER(MER_NM) like '%TRADEOGRE%' or
+	UPPER(MER_NM) like '%UNOCOIN%' or
+	UPPER(MER_NM) like '%UPHOLD.COM%' or
+	UPPER(MER_NM) like '%VAULTORO %' or
+	UPPER(MER_NM) like '%WALLOF COINS%' or
+	UPPER(MER_NM) like '%WANKEBI%' or
+	UPPER(MER_NM) like '%WORLD EXCHANGE SERVIES (WEX)%' or
+	UPPER(MER_NM) like '%WWW.BITIT.IO%' or
+	UPPER(MER_NM) like '%XCOINS%' or
+	UPPER(MER_NM) like '%YAPIZON%' or
+	UPPER(MER_NM) like '%YOBIT.NET%' or
+	UPPER(MER_NM) like '%YOUBIT%' or 
+	UPPER(MER_NM) like '%IVMC%' or 
+	UPPER(MER_NM) like '%BITCOINS NORWAY%' or 
+	UPPER(MER_NM) like '%BITKONAN%' or 
+	UPPER(MER_NM) like '%ICE3X%' or 
+    UPPER(MER_NM) like '%ASKCOIN%' or
+	UPPER(MER_NM) like '%PAYBIS-SIMPLEX%' or
+	UPPER(MER_NM) like '%PSP*koinal%' or
+	UPPER(MER_NM) like '%MCO%' or
+	UPPER(MER_NM) like '%MOONPAY%' or
+	UPPER(MER_NM) like '%IEXPAY.NET%' or
+	UPPER(MER_NM) like '%switchere.com%' or
+	UPPER(MER_NM) like '%BUY DIGITAL ASSET%' or
+	UPPER(MER_NM) like '%Wisenex.com%' or 
+	UPPER(MER_NM) like '%congee.io%' or
+	UPPER(MER_NM) like '%Mercuryo%' or
+	UPPER(MER_NM) like '%Simplex%' or
+	UPPER(MER_NM) like '%PAYBIS%' or
+	UPPER(MER_NM) like '%N.exchange%' or 
+	UPPER(MER_NM) like '%WYRE%' or
+	UPPER(MER_NM) like '%QUICKBIT.COM%' or
+	UPPER(MER_NM) like '%CRO%' or
+	UPPER(MER_NM) like '%Crypto.com%' or
+	UPPER(MER_NM) like '%UniMal Ltd%' or
+	UPPER(MER_NM) like '%Moon Pay%'
+)
+)

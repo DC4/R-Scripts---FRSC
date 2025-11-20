@@ -1,0 +1,43 @@
+BLACKLIST_MIDS_COUNTRYWISE_DEBIT <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/BLACKLIST_MIDS_COUNTRYWISE_DEBIT.xls")
+
+BLACKLIST_MIDS_BINATTACK_DEBIT <- read_excel("//inhadfil101.in.standardchartered.com/wkgrps5/RAC_IN_MIS/Sumeet/R_Simulation/Hotlist/BLACKLIST_MIDS_BINATTACK_DEBIT.xls")
+
+BLACKLIST_MIDS_COUNTRYWISE_DEBIT <- data.table(BLACKLIST_MIDS_COUNTRYWISE_DEBIT)
+BLACKLIST_MIDS_BINATTACK_DEBIT <- data.table(BLACKLIST_MIDS_BINATTACK_DEBIT)
+Country_Txn_Data_2 <- data.table(Country_Txn_Data_1)
+
+CNTY_BLACKLIST_MIDS_COUNTRYWISE_DEBIT <- Country_Txn_Data_2
+CNTY_BLACKLIST_MIDS_COUNTRYWISE_DEBIT <- NULL
+CNTY_BLACKLIST_MIDS_BINATTACK_DEBIT <- Country_Txn_Data_2
+CNTY_BLACKLIST_MIDS_BINATTACK_DEBIT <- NULL
+
+Country_list <- ('AE', 'BH', 'BN', 'BW', 'CI', 'CM', 'GH', 'GM', 'IN', 'JO', 'KE', 'LK', 'NG', 'NP', 'QA', 'SG', 'SL', 'TZ', 'UG', 'VN', 'ZM', 'ZW')
+
+Country_list <- list('AE', 'BH')
+
+Unique_Country_Data_fnc <- function(x) {
+for (i in 1:length(Country_list)) {
+		(	
+		
+			TEMP_BLACKLIST_MIDS_COUNTRYWISE_DEBIT_1 <- sqldf(paste0("Select * from BLACKLIST_MIDS_COUNTRYWISE_DEBIT where UPPER(Value) like '%", noquote(Country_list[[i]]), "%'"))
+			
+			TEMP_BLACKLIST_MIDS_COUNTRYWISE_DEBIT_2 <- sqldf(paste0("Select * from TEMP_BLACKLIST_MIDS_COUNTRYWISE_DEBIT_1 B Left join Country_Txn_Data_2 A on trim(A.mer_id) = B.Name where UPPER(A.cnty) = ", "'",(Country_list[[i]]),"'"))
+			
+			TEMP_BLACKLIST_MIDS_BINATTACK_DEBIT_1 <- sqldf(paste0("Select * from BLACKLIST_MIDS_BINATTACK_DEBIT where UPPER(Value) like '%", noquote(Country_list[[i]]), "%'"))
+		
+			TEMP_BLACKLIST_MIDS_BINATTACK_DEBIT_2 <- sqldf(paste0("Select * from TEMP_BLACKLIST_MIDS_BINATTACK_DEBIT_1 B Left join Country_Txn_Data_2 A on trim(A.mer_id) = B.Name where UPPER(A.cnty) = ", "'",(Country_list[[i]]),"'"))
+			
+		)
+		CNTY_BLACKLIST_MIDS_COUNTRYWISE_DEBIT <- rbind(CNTY_BLACKLIST_MIDS_COUNTRYWISE_DEBIT, TEMP_BLACKLIST_MIDS_COUNTRYWISE_DEBIT_2)
+		
+		CNTY_BLACKLIST_MIDS_BINATTACK_DEBIT <- rbind(CNTY_BLACKLIST_MIDS_BINATTACK_DEBIT, TEMP_BLACKLIST_MIDS_BINATTACK_DEBIT_2)
+	}
+  Country_Txn_Data_2 <- rbind(CNTY_BLACKLIST_MIDS_COUNTRYWISE_DEBIT, CNTY_BLACKLIST_MIDS_BINATTACK_DEBIT)
+}
+
+require(compiler)
+# enableJIT(3)
+# help(cmpfun)
+Unique_Country_Data_fnc <- cmpfun(Unique_Country_Data_fnc)
+Unique_Country_Data = sapply(Country_list, Unique_Country_Data_fnc)
+
